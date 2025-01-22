@@ -9,6 +9,7 @@ function App() {
   const [arrowV, setArrowV] = useState(0)
   const [arrowH, setArrowH] = useState(0)
   const [pressedKey, setPressedKey] = useState(null);
+  const [selectedObject, setSelectedObject] = useState(null);
 
   const limitV = 3+1
   const limitH = 5
@@ -60,12 +61,22 @@ function App() {
   return (
     <>
       <div className="sidebar">
-        <div className="object-data">
-          <div className="object-name">Object Info-x</div>
-          <div className="object-properties">
-            Click an object to see its properties
+          <div className="object-data">
+            {selectedObject ? (
+              <>
+                <div className="object-name">{selectedObject.name}</div>
+                <div className="object-properties">
+                  <p>
+                    {selectedObject.objectInfo && JSON.stringify(selectedObject.objectInfo, null, 2)}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="object-properties">
+                Click an object to see its properties
+              </div>
+            )}
           </div>
-        </div>
         
         <div className="controls-container">
           <div className="state-display">
@@ -101,7 +112,11 @@ function App() {
       >
         <OrbitControls />
         <LightScene />
-        <LoadModels arrowV={arrowV} arrowH={arrowH} />
+        <LoadModels 
+          arrowV={arrowV} 
+          arrowH={arrowH}
+          onObjectSelect={setSelectedObject} 
+        />
       </Canvas>
     </>
   )

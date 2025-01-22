@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap');
+
 .controls {
   position: fixed;
   bottom: 20px;
@@ -6,6 +8,7 @@
   z-index: 1000;
   display: flex;
   gap: 10px;
+  font-family: 'Noto Sans Thai', sans-serif;
 }
 
 .controls button {
@@ -42,26 +45,34 @@
   top: 0;
   width: 200px;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
+  background: linear-gradient(145deg, rgba(30,30,30,0.85), rgba(50,50,50,0.85));
   color: white;
   padding: 20px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Noto Sans Thai', sans-serif;
 }
 
 .object-data {
   flex: 1;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: white;
 }
 
 .object-name {
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 10px;
+  font-family: 'Noto Sans Thai', sans-serif;
 }
 
 .object-properties {
@@ -75,12 +86,14 @@
 }
 
 .state-display {
-  font-family: monospace;
+  font-family: 'Noto Sans Thai', monospace;
   font-size: 18px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(88, 88, 88, 0.9);
   border-radius: 5px;
   margin-bottom: 10px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .arrow-controls {
@@ -94,24 +107,24 @@
 
 .arrow-controls button {
   padding: 10px;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   font-size: 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  line-height: 1;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .arrow-controls button:hover {
-  background: rgba(198, 21, 21, 0.821);
+  background: rgba(210, 211, 210, 0.821);
   transform: scale(1.15);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
@@ -121,7 +134,7 @@
 .arrow-controls button.pressed-down,
 .arrow-controls button.pressed-left,
 .arrow-controls button.pressed-right {
-  background: rgba(198, 21, 21, 0.821);
+  background: rgba(210, 211, 210, 0.821);
   transform: scale(0.9);
   box-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }

@@ -1,41 +1,18 @@
 import { useGLTF } from '@react-three/drei'
+import { useState, useRef } from 'react'
+import * as THREE from 'three'
 
-export default function LoadModels({ arrowV, arrowH }) {
-    // const { nodes } = useGLTF('./src/assets/models/modelvh_2.glb')
-    const { nodes } = useGLTF('./models/model023-04.glb')
-
+export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
+    const { nodes } = useGLTF('./models/modelvh.glb')
+    const [hovered, setHovered] = useState(null)
+    const [clicked, setClicked] = useState(null)
+    const originalMaterials = useRef(new Map())
+    console.log(nodes.Scene)
+    // const { nodes } = useGLTF('./models/model023-04.glb')
 
     console.log(nodes)
     console.log('Current State:', `V${arrowV}H${arrowH}`)
     
-    // // Log all nodes to find Plane.000
-    // Object.values(nodes).forEach(node => {
-    //     if (node.name === 'Plane000' || node.name === 'Plane.000') {
-    //         // console.log('Found Plane000:', node.name, 'userData:', node.userData);
-    //     }
-    // });
-    
-    // Function to render V0H0 object
-    // const renderV0H0 = () => {
-    //     const baseNode = Object.values(nodes).find(
-    //         node => node.userData?.modelV === 0 && node.userData?.modelH === 0
-    //     );
-        
-    //     if (baseNode) {
-    //         // console.log('Rendering V0H0:', baseNode.name);
-    //         return (
-    //             <primitive 
-    //                 position ={[-2.50,0,0]}
-    //                 key={baseNode.uuid}
-    //                 object={baseNode}
-    //                 visible={true}
-    //                 castShadow
-    //                 receiveShadow
-    //             />
-    //         );
-    //     }
-    //     return null;
-    // };
 
     return (
         <group>
@@ -60,29 +37,76 @@ export default function LoadModels({ arrowV, arrowH }) {
                 }
                 
                 return (
-                    <>
-                    <mesh>
-                        <boxGeometry args={[1,100,1]} />
-                        <meshStandardMaterial color="red" />
-                    </mesh>
-
-                    {/* <primitive 
+                    <primitive 
                         position ={[-2.50,0,0]}
                         key={node.uuid}
                         object={node}
                         visible={shouldShow}
                         castShadow
                         receiveShadow
-                    /> */}
-
-                    <group position = {[0,0,7.5]}>
-                        <primitive object={nodes.Scene} />
-                    </group>
-                    </>
+                        onPointerEnter={(e) => {
+                            e.stopPropagation()
+                            setHovered(node.uuid)
+                            // Store original material if not already stored
+                            if (!originalMaterials.current.has(node.uuid)) {
+                                originalMaterials.current.set(node.uuid, node.material)
+                            }
+                            // Change to hotpink
+                            node.material = new THREE.MeshStandardMaterial({
+                                color: 'hotpink',
+                                metalness: 0.1,
+                                roughness: 0.75
+                            })
+                        }}
+                        onPointerLeave={(e) => {
+                            e.stopPropagation()
+                            setHovered(null)
+                            // Restore original material if not clicked
+                            if (node.uuid !== clicked) {
+                                node.material = originalMaterials.current.get(node.uuid)
+                            }
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            // If clicking the same object again, deselect it
+                            if (clicked === node.uuid) {
+                                setClicked(null)
+                                node.material = originalMaterials.current.get(node.uuid)
+                                onObjectSelect(null)
+                                return
+                            }
+                            
+                            setClicked(node.uuid)
+                            
+                            // If another object was previously clicked, restore its material
+                            if (clicked) {
+                                const prevNode = Object.values(nodes).find(n => n.uuid === clicked)
+                                if (prevNode) {
+                                    prevNode.material = originalMaterials.current.get(clicked)
+                                }
+                            }
+                            
+                            // Set new clicked object's material to hotpink
+                            node.material = new THREE.MeshStandardMaterial({
+                                color: 'hotpink',
+                                metalness: 0.1,
+                                roughness: 0.75
+                            })
+                            
+                            // Trigger object info display
+                            if (node.userData?.objectInfo) {
+                                console.log('Selected Object Info:', node.userData.objectInfo)
+                                onObjectSelect({
+                                    name: node.name,
+                                    objectInfo: node.userData.objectInfo
+                                })
+                            }
+                        }}
+                    />
                 )
             })}
         </group>
     )
 }
 
-useGLTF.preload('./src/assets/models/vhkey.glb')
+useGLTF.preload('./models/modelvh.glb')
