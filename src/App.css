@@ -69,10 +69,16 @@
 }
 
 .object-name {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
   font-family: 'Noto Sans Thai', sans-serif;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .object-properties {

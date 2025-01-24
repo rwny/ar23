@@ -61,14 +61,22 @@ function App() {
   return (
     <>
       <div className="sidebar">
+          {selectedObject && (
+            <div className="object-name">{selectedObject.header}</div>
+          )}
           <div className="object-data">
             {selectedObject ? (
               <>
-                <div className="object-name">{selectedObject.name}</div>
                 <div className="object-properties">
-                  <p>
-                    {selectedObject.objectInfo && JSON.stringify(selectedObject.objectInfo, null, 2)}
-                  </p>
+                  <div className="model-data">
+                    <div>Model V: {selectedObject.details.modelV}</div>
+                    <div>Model H: {selectedObject.details.modelH}</div>
+                    {selectedObject.objectInfo && (
+                      <pre>
+                        {JSON.stringify(selectedObject.objectInfo, null, 2)}
+                      </pre>
+                    )}
+                  </div>
                 </div>
               </>
             ) : (
@@ -79,6 +87,17 @@ function App() {
           </div>
         
         <div className="controls-container">
+          <div className="phase-display">
+            <div>Phase: {
+              arrowV === 0 ? 'Existing' :
+              arrowV === 1 ? 'Arch Demolish' :
+              arrowV === 2 ? 'Structure Demolish' :
+              arrowV === 3 ? 'Structure' :
+              arrowV === 4 ? 'Architecture' :
+              arrowV === 5 ? 'Interior' :
+              'Unknown'
+            }</div>
+          </div>
           <div className="state-display">
             <div>V: {arrowV} H: {arrowH}</div>
           </div>
@@ -115,7 +134,7 @@ function App() {
         <LoadModels 
           arrowV={arrowV} 
           arrowH={arrowH}
-          onObjectSelect={setSelectedObject} 
+          onObjectSelect={setSelectedObject}
         />
       </Canvas>
     </>

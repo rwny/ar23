@@ -1,30 +1,55 @@
+import { useRef, useEffect } from 'react';
+import { CameraHelper } from 'three';
+import { Grid } from '@react-three/drei';
+
 export default function LightScene() {
+    const shadowArea = 100;
+    const shadowMapSize = 1024 * 10;
+    const lightRef = useRef();
+
+    useEffect(() => {
+        if (lightRef.current) {
+            const shadowCamera = lightRef.current.shadow.camera;
+            const helper = new CameraHelper(shadowCamera);
+            lightRef.current.parent.add(helper);
+            
+            return () => {
+                helper.dispose();
+            };
+        }
+    }, []);
+
     return (
         <>
+            <Grid
+                position={[0, -0.1, 0]}
+                args={[100, 100]}
+                cellSize={1}
+                cellThickness={1}
+                cellColor="#6f6f6f55"
+                sectionSize={10}
+                sectionThickness={1}
+                sectionColor="#9d4b4b55"
+                fadeDistance={100}
+                fadeStrength={2}
+                infiniteGrid={true}
+            />
             <ambientLight intensity={0.5} />
             <directionalLight 
-                position={[5, 5, 5]} 
-                intensity={1} 
+                ref={lightRef}
+                position={[-10, 35, -50]}
+                intensity={2}
                 castShadow
-                shadow-mapSize={[2048, 2048]}
-                shadowBias={-0.0001}
+                shadow-mapSize={[shadowMapSize, shadowMapSize]}
+                shadow-camera-left={-shadowArea}
+                shadow-camera-right={shadowArea}
+                shadow-camera-top={shadowArea}
+                shadow-camera-bottom={-shadowArea}
+                shadow-camera-near={0.1}
+                shadow-camera-far={200}
+                shadowBias={0.01}
+                shadowNormalBias={0.04}
             />
-            
-            {/* Floor Plane */}
-            {/* <mesh 
-                rotation={[-Math.PI / 2, 0, 0]} 
-                position={[0, 0, 0]} 
-                receiveShadow
-                
-            >
-                <planeGeometry args={[30, 30]} />
-                <meshStandardMaterial 
-                    // color="#303030" 
-                    color="#eaeaea" 
-                    // roughness={0.8}
-                    // metalness={0.2}
-                />
-            </mesh> */}
         </>
     )
 }
