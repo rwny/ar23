@@ -11,3 +11,6 @@
 - modelV
    - V0 existing -- show all
       - H0 
+
+
+log **

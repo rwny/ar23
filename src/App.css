@@ -1,14 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap');
 
-.controls {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  display: flex;
-  gap: 10px;
+* {
   font-family: 'Noto Sans Thai', sans-serif;
+}
+
+body {
+  background-image: url('./image/bg1428.png')
+}
+
+.object-label {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .controls {
+    bottom: 10px;
+    gap: 8px;
+    padding: 0 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .controls button {
+    padding: 8px;
+    font-size: 18px;
+    min-width: 40px;
+  }
 }
 
 .controls button {
@@ -35,8 +62,16 @@
   background: rgba(0, 0, 0, 0.5);
   padding: 10px 20px;
   border-radius: 5px;
-  font-family: monospace;
+  font-family: 'Noto Sans Thai', sans-serif;
   font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .value-display {
+    bottom: 70px;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
 }
 
 .sidebar {
@@ -45,26 +80,53 @@
   top: 0;
   width: 200px;
   height: 100vh;
-  background: linear-gradient(145deg, rgba(30,30,30,0.85), rgba(50,50,50,0.85));
+  background: rgba(30, 30, 30, 0.5);
   color: white;
-  padding: 20px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
-  box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+  box-shadow: inset -2px 0 0 rgba(255,255,255,0.1), 
+              -2px 0 4px rgba(0,0,0,0.1);
+ 
+  transition: transform 0.3s ease-in-out;
+  /* backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(10px); */
+}
+
+.sidebar.hidden {
+  transform: translateX(100%);
+}
+
+.sidebar-toggle {
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  width: 20px;
+  height: 40px;
+  background: rgba(30, 30, 30, 0.5);
+  border: none;
+  border-radius: 5px 0 0 5px;
+  color: white;
+  cursor: pointer;
+  box-shadow: -2px 0 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
   backdrop-filter: blur(10px);
-  border-left: 1px solid rgba(255,255,255,0.1);
-  font-family: 'Noto Sans Thai', sans-serif;
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.sidebar-toggle:hover {
+  background: #2e2e2e;
 }
 
 .object-data {
   flex: 1;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   color: white;
 }
 
@@ -73,16 +135,11 @@
   font-weight: 700;
   margin-bottom: 15px;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
-  font-family: 'Noto Sans Thai', sans-serif;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .object-properties {
-  font-family: monospace;
+  font-family: 'Noto Sans Thai', sans-serif;
   font-size: 14px;
 }
 
@@ -92,10 +149,9 @@
 }
 
 .state-display {
-  font-family: 'Noto Sans Thai', monospace;
+  font-family: 'Noto Sans Thai', sans-serif;
   font-size: 18px;
   padding: 10px;
-  background: rgba(88, 88, 88, 0.9);
   border-radius: 5px;
   margin-bottom: 10px;
   border: 1px solid rgba(0,0,0,0.05);
@@ -118,7 +174,7 @@
   font-size: 16px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border-radius: 8px;
   color: white;
   cursor: pointer;
   display: flex;

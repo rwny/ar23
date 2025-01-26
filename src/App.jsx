@@ -10,6 +10,7 @@ function App() {
   const [arrowH, setArrowH] = useState(0)
   const [pressedKey, setPressedKey] = useState(null);
   const [selectedObject, setSelectedObject] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const limitV = 3+1
   const limitH = 5
@@ -60,7 +61,13 @@ function App() {
 
   return (
     <>
-      <div className="sidebar">
+      <div className={`sidebar ${showSidebar ? '' : 'hidden'}`}>
+        <button 
+          className="sidebar-toggle"
+          onClick={() => setShowSidebar(!showSidebar)}
+        >
+          {showSidebar ? '◄' : '►'}
+        </button>
           {selectedObject && (
             <div className="object-name">{selectedObject.header}</div>
           )}
@@ -99,7 +106,7 @@ function App() {
             }</div>
           </div>
           <div className="state-display">
-            <div>V: {arrowV} H: {arrowH}</div>
+            <div>State {arrowV}-{arrowH}</div>
           </div>
           <div className="arrow-controls">
             <button 

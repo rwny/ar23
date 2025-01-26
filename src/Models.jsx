@@ -1,85 +1,95 @@
-import { useGLTF } from '@react-three/drei'
-import { useState, useRef, useMemo } from 'react'
+import { useGLTF, Html } from '@react-three/drei'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import * as THREE from 'three'
-import { userData } from 'three/tsl'
 
 export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
-    const { nodes } = useGLTF('./models/model23-a04.glb')
-    // const { nodes } = useGLTF('./models/model023-04.glb')
+    // Table to store model data
+    const [modelTable, setModelTable] = useState([])
+
+    // Load main GLB model
+    const models = {
+        model23a04: useGLTF('/models/model23-a04.glb')
+    }
+
+    useEffect(() => {
+        // Create combined model table
+        const table = []
+        
+        Object.values(models).forEach(model => {
+            Object.values(model.nodes).forEach(node => {
+                if (node.userData?.modelH && node.userData?.modelV) {
+                    table.push({
+                        name: node.name,
+                        modelV: node.userData.modelV,
+                        modelH: node.userData.modelH,
+                        uuid: node.uuid
+                    })
+                }
+            })
+        })
+
+        // Sort by modelV then modelH
+        table.sort((a, b) => {
+            if (a.modelV === b.modelV) {
+                return a.modelH - b.modelH
+            }
+            return a.modelV - b.modelV
+        })
+
+        setModelTable(table)
+        console.log('Model Table:', table)
+    }, [])
 
     const [hovered, setHovered] = useState(null)
     const [clicked, setClicked] = useState(null)
+    const [labelPosition, setLabelPosition] = useState(null)
     const originalMaterials = useRef(new Map())
     
-    // Pre-cache the selection material
     const selectionMaterial = useMemo(() => new THREE.MeshStandardMaterial({
         color: 'gold',
         metalness: 0.1,
         roughness: 0.75
     }), [])
     
-    // Create a map of nodes by UUID for faster lookups
     const nodesMap = useMemo(() => {
         const map = new Map()
-        Object.values(nodes).forEach(node => map.set(node.uuid, node))
+        Object.values(models.model23a04.nodes).forEach(node => map.set(node.uuid, node))
         return map
-    }, [nodes])
-    console.log(nodes.Scene)
-
-    console.log(nodes)
-    console.log('Current State:', `V${arrowV}H${arrowH}`)
-    
+    }, [models])
 
     return (
         <group position={[0,0,7.50]} >
-            {Object.values(nodes).map((node) => {
-                // if (!node.userData?.modelV && !node.userData?.modelH) return null;
-                // if (node.userData.modelV === 0 && node.userData.modelH === 0) return null; // Skip V0H0
-                
-                const isCurrentVRow = node.userData.modelV === arrowV;
-                let shouldShow = false;
+            {Object.values(models.model23a04.nodes).map((node) => {
+                const isCurrentVRow = node.userData.modelV === arrowV
+                let shouldShow = false
                 
                 switch (arrowV) {
                     case 0:
-                        // Show all modelV 0,1,2
-                        shouldShow = true;
-                        break;
-                        
+                        shouldShow = true
+                        break
                     case 1:
                         if (node.userData.modelV === 0) {
-                            // Always show modelV 0
-                            shouldShow = true;
+                            shouldShow = true
                         } else if (node.userData.modelV === 1) {
-                            // Show modelV 1 only if modelH >= arrowH
-                            shouldShow = arrowH < node.userData.modelH;
+                            shouldShow = arrowH < node.userData.modelH
                         } else if (node.userData.modelV === 2) {
-                            shouldShow = true;
+                            shouldShow = true
                         }
-                        break;
-                        
+                        break
                     case 2:
                         if (node.userData.modelV === 0) {
-                            // Always show modelV 0
-                            shouldShow = true;
+                            shouldShow = true
                         } else if (node.userData.modelV === 1) {
-                            // Show modelV 1 if modelH > 0
-                            shouldShow != node.userData.modelH > 0;
+                            shouldShow = node.userData.modelH < 0
                         } else if (node.userData.modelV === 2) {
-                            // Show modelV 2 only if modelH >= arrowH
-                            shouldShow = arrowH < node.userData.modelH;
+                            shouldShow = arrowH < node.userData.modelH
                         }
-                        break;
-                        
+                        break
                     default:
-                        shouldShow = false;
-                }
-                
-                if (shouldShow) {
-                    console.log('Visible Node:', node.name, `V${node.userData.modelV}H${node.userData.modelH}`);
+                        shouldShow = false
                 }
                 
                 return (
-
                     <primitive 
                         key={node.uuid}
                         object={node}
@@ -87,14 +97,11 @@ export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
                         castShadow
                         receiveShadow
                         onClick={(e) => {
-                            // Only stop propagation if we're actually handling the click
                             if (clicked !== node.uuid) {
                                 e.stopPropagation()
                             }
                             
-                            // Use timeout to allow orbit controls to process first
                             setTimeout(() => {
-                                // If clicking the same object again, deselect it
                                 if (clicked === node.uuid) {
                                     setClicked(null)
                                     node.material = originalMaterials.current.get(node.uuid)
@@ -105,7 +112,6 @@ export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
                                 setClicked(node.uuid)
                             
                                 try {
-                                    // If another object was previously clicked, restore its material
                                     if (clicked) {
                                         const prevNode = nodesMap.get(clicked)
                                         if (prevNode && originalMaterials.current.has(clicked)) {
@@ -116,12 +122,10 @@ export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
                                         }
                                     }
                                     
-                                    // Store original material if not already stored
                                     if (!originalMaterials.current.has(node.uuid)) {
                                         originalMaterials.current.set(node.uuid, node.material)
                                     }
                                     
-                                    // Set new clicked object's material using pre-cached material
                                     if (node) {
                                         node.material = selectionMaterial
                                     }
@@ -129,9 +133,7 @@ export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
                                     console.error('Error handling click:', error)
                                 }
                                 
-                                // Trigger object info display
                                 if (node.userData) {
-                                    console.log('Selected Object Info:', node.userData)
                                     onObjectSelect({
                                         header: node.name,
                                         details: {
@@ -141,13 +143,27 @@ export default function LoadModels({ arrowV, arrowH, onObjectSelect }) {
                                         }
                                     })
                                 }
-                            }, 50) // Small delay to allow orbit controls to process
+                            }, 50)
                         }}
-                    />
+                        onPointerMove={(e) => {
+                            e.stopPropagation()
+                            setLabelPosition(e.point)
+                        }}
+                        onPointerOut={() => setLabelPosition(null)}
+                    >
+                        {clicked === node.uuid && labelPosition && (
+                            <Html position={[0, 0, 0]} center>
+                                <div className="object-label">
+                                    {node.name}
+                                </div>
+                            </Html>
+                        )}
+                    </primitive>
                 )
             })}
         </group>
     )
 }
 
-useGLTF.preload('./models/model23-a04.glb')
+// Preload main model
+useGLTF.preload('/models/model23-a04.glb')

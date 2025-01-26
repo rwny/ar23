@@ -1,28 +1,76 @@
-import { useRef, useEffect } from 'react';
-import { CameraHelper } from 'three';
-import { Grid } from '@react-three/drei';
+import { useRef } from 'react';
+import { Grid, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Environment } from '@react-three/drei';
 
 export default function LightScene() {
-    const shadowArea = 100;
-    const shadowMapSize = 1024 * 10;
-    const lightRef = useRef();
-
-    useEffect(() => {
-        if (lightRef.current) {
-            const shadowCamera = lightRef.current.shadow.camera;
-            const helper = new CameraHelper(shadowCamera);
-            lightRef.current.parent.add(helper);
-            
-            return () => {
-                helper.dispose();
-            };
-        }
-    }, []);
-
     return (
         <>
+            <SoftShadows size={40} samples={16} />
+            
+            <Environment 
+                preset="city"
+                intensity={0.5}
+                background={false}
+            />
+            
+            {/* Main directional light */}
+            <directionalLight
+                position={[-50, 35, 50]}
+                intensity={1.2}
+                castShadow
+                shadow-mapSize={[1024, 1024]}
+                shadow-camera-left={-50}
+                shadow-camera-right={50}
+                shadow-camera-top={50}
+                shadow-camera-bottom={-50}
+                shadow-camera-near={0.1}
+                shadow-camera-far={200}
+                shadowBias={-0.001}
+            />
+
+            {/* Shadow-receiving plane */}
+            <mesh 
+                position={[0, -0.8, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                receiveShadow
+            >
+                <planeGeometry args={[100, 100]} />
+                <meshStandardMaterial color="#f0f0f0" />
+            </mesh>
+
+            {/* Additional ambient light */}
+            <ambientLight intensity={0.3} />
+
+            <AccumulativeShadows
+                position={[0, -0.5, 0]}
+                frames={100}
+                alphaTest={0.9}
+                scale={100}
+                color="black"
+                opacity={0.8}
+            >
+                <RandomizedLight
+                    amount={8}
+                    radius={10}
+                    ambient={0.5}
+                    intensity={1}
+                    position={[-50, 35, 50]}
+                    bias={0.001}
+                    castShadow
+                />
+            </AccumulativeShadows>
+
+            <ContactShadows
+                position={[0, -0.5, 0]}
+                opacity={0.8}
+                blur={2}
+                far={10}
+                resolution={1024}
+                color="#000000"
+                receiveShadow
+            />
+
             <Grid
-                position={[0, -0.1, 0]}
+                position={[0, -0.5, 0]}
                 args={[100, 100]}
                 cellSize={1}
                 cellThickness={1}
@@ -33,22 +81,6 @@ export default function LightScene() {
                 fadeDistance={100}
                 fadeStrength={2}
                 infiniteGrid={true}
-            />
-            <ambientLight intensity={0.5} />
-            <directionalLight 
-                ref={lightRef}
-                position={[-10, 35, -50]}
-                intensity={2}
-                castShadow
-                shadow-mapSize={[shadowMapSize, shadowMapSize]}
-                shadow-camera-left={-shadowArea}
-                shadow-camera-right={shadowArea}
-                shadow-camera-top={shadowArea}
-                shadow-camera-bottom={-shadowArea}
-                shadow-camera-near={0.1}
-                shadow-camera-far={200}
-                shadowBias={0.01}
-                shadowNormalBias={0.04}
             />
         </>
     )
