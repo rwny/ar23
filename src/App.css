@@ -4,8 +4,19 @@
   font-family: 'Noto Sans Thai', sans-serif;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  background-image: url('./image/bg1428.png')
+  background-image: url('./image/bg1428.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .object-label {
