@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 
 function Models() {
-  const { scene } = useGLTF("/models/model23-a05.glb");
+  const { scene } = useGLTF("./models/model23-a05.glb");
 
   scene.traverse((child) => {
     if (child.isMesh) {
