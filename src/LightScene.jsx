@@ -26,20 +26,10 @@ export default function LightScene() {
                 shadow-camera-far={200}
                 shadowBias={-0.001}
             />
-
-            {/* Shadow-receiving plane */}
-            <mesh 
-                position={[0, -0.8, 0]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                receiveShadow
-            >
-                <planeGeometry args={[100, 100]} />
-                <meshStandardMaterial color="#f5f5f5" />
-            </mesh>
-
+            
             {/* Additional ambient light */}
             <ambientLight intensity={0.3} />
-
+            
             <AccumulativeShadows
                 position={[0, -0.5, 0]}
                 frames={100}
@@ -58,8 +48,8 @@ export default function LightScene() {
                     castShadow
                 />
             </AccumulativeShadows>
-
-            <ContactShadows
+            
+            {/* <ContactShadows
                 position={[0, -0.5, 0]}
                 opacity={0.6}
                 blur={1}
@@ -67,8 +57,8 @@ export default function LightScene() {
                 resolution={1024}
                 color="#000000"
                 receiveShadow
-            />
-
+            /> */}
+            
             <Grid
                 position={[0, -0.5, 0]}
                 args={[100, 100]}
@@ -82,8 +72,21 @@ export default function LightScene() {
                 fadeStrength={2}
                 infiniteGrid={true}
             />
-            <OrbitControls />
+
+            <OrbitControls 
+                enablePan={true}
+                enableZoom={true}
+                enableRotate={true}
+                minDistance={15} 
+                maxDistance={50}
+                enableTilt={true}
+                enableDamping={true}
+                dampingFactor={0.5}
+                // minAzimuthAngle={-Math.PI/2}
+                // maxAzimuthAngle={Math.PI/2}
+                minPolarAngle={0.9} // bird eye
+                maxPolarAngle={1.52} // normal eye level
+            />
         </>
     )
 }
-
