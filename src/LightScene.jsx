@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Grid, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Environment } from '@react-three/drei';
+import { Grid, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Environment, OrbitControls } from '@react-three/drei';
 
 export default function LightScene() {
     return (
@@ -34,7 +34,7 @@ export default function LightScene() {
                 receiveShadow
             >
                 <planeGeometry args={[100, 100]} />
-                <meshStandardMaterial color="#f0f0f0" />
+                <meshStandardMaterial color="#f5f5f5" />
             </mesh>
 
             {/* Additional ambient light */}
@@ -46,7 +46,7 @@ export default function LightScene() {
                 alphaTest={0.9}
                 scale={100}
                 color="black"
-                opacity={0.8}
+                opacity={0.6}
             >
                 <RandomizedLight
                     amount={8}
@@ -61,8 +61,8 @@ export default function LightScene() {
 
             <ContactShadows
                 position={[0, -0.5, 0]}
-                opacity={0.8}
-                blur={2}
+                opacity={0.6}
+                blur={1}
                 far={10}
                 resolution={1024}
                 color="#000000"
@@ -77,11 +77,13 @@ export default function LightScene() {
                 cellColor="#6f6f6f55"
                 sectionSize={10}
                 sectionThickness={1}
-                sectionColor="#9d4b4b55"
+                sectionColor="#9d4b4b22"
                 fadeDistance={100}
                 fadeStrength={2}
                 infiniteGrid={true}
             />
+            <OrbitControls />
         </>
     )
 }
+
