@@ -29,7 +29,7 @@ export default function LightScene() {
                 shadowBias={-0.01}
             />
             
-            <Grid
+            {/* <Grid
                 position={[0, -0.5, 0]}
                 args={[100, 100]}
                 cellSize={1}
@@ -41,7 +41,7 @@ export default function LightScene() {
                 fadeDistance={100}
                 fadeStrength={2}
                 infiniteGrid={true}
-            />
+            /> */}
 
             <OrbitControls 
                 enablePan={true}
@@ -57,6 +57,12 @@ export default function LightScene() {
                 minPolarAngle={0.9} // bird eye
                 maxPolarAngle={1.52} // normal eye level
             />
+
+            {/* Floor Plane */}
+            <mesh position={[0,-1,0]} rotation-x={-Math.PI / 2}>
+                <planeGeometry args={[100, 100, 100]} />
+                <meshStandardMaterial color="gray" />
+            </mesh>
         </>
     )
 }
