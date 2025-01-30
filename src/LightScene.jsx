@@ -7,9 +7,9 @@ export default function LightScene() {
         <>
 
             <Environment
-                files="./image/lakeside_sunrise_1k.exr" 
+                files="./image/pretoria_gardens_1k.exr" 
                 background
-                backgroundBlurriness={0.1}
+                backgroundBlurriness={0.5}
             />
 
             <ambientLight intensity={0.3} />
@@ -28,21 +28,6 @@ export default function LightScene() {
                 shadow-camera-far={200}
                 shadowBias={-0.01}
             />
-            
-            {/* <Grid
-                position={[0, -0.5, 0]}
-                args={[100, 100]}
-                cellSize={1}
-                cellThickness={1}
-                cellColor="#6f6f6f"
-                sectionSize={10}
-                sectionThickness={1}
-                sectionColor="#9d4b4b"
-                fadeDistance={100}
-                fadeStrength={2}
-                infiniteGrid={true}
-            /> */}
-
             <OrbitControls 
                 enablePan={true}
                 enableZoom={true}
@@ -50,8 +35,8 @@ export default function LightScene() {
                 minDistance={15} 
                 maxDistance={50}
                 enableTilt={true}
-                enableDamping={true}
-                dampingFactor={0.5}
+                enableDamping={false}
+                dampingFactor={0.8}
                 // minAzimuthAngle={-Math.PI/2}
                 // maxAzimuthAngle={Math.PI/2}
                 minPolarAngle={0.9} // bird eye
@@ -60,9 +45,25 @@ export default function LightScene() {
 
             {/* Floor Plane */}
             <mesh position={[0,-1,0]} rotation-x={-Math.PI / 2}>
-                <planeGeometry args={[100, 100, 100]} />
+                <planeGeometry args={[150, 150]} />
                 <meshStandardMaterial color="gray" />
             </mesh>
+
+            {/* Grid Overlay */}
+            <Grid
+                position={[0, -0.5, 0]}
+                args={[100, 100]}
+                cellSize={1}
+                cellThickness={1}
+                cellColor="#6f6f6f55"
+                sectionSize={10}
+                sectionThickness={1}
+                sectionColor="#9d4b4b22"
+                fadeDistance={100}
+                fadeStrength={2}
+                infiniteGrid={true}
+            />
+
         </>
     )
 }

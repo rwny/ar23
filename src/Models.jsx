@@ -16,9 +16,6 @@ function Models() {
       <group position={[-10, 0, 7.50]}>
         <primitive object={scene} />
       </group>
-
-
-
     </group>
   );
 }

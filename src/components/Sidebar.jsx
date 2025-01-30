@@ -7,9 +7,9 @@ function Sidebar() {
     <div className="sidebar-container">
       <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? (
-          "<"
+          "o"
         ) : (
-          ">"
+          "o"
         )}
       </button>
       <div className={`sidebar ${!isOpen ? 'open' : ''}`}>
